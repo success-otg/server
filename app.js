@@ -4,9 +4,12 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require('cors')
+const router = require('./routes/index')
 
-const indexRouter = require('./routes/index');
-const usersRouter = require('./routes/users');
+/*const indexRouter = require('./routes/index');
+const usersRouter = require('./routes/admin');*/
+
+const db = require('./db/db')
 
 const app = express();
 
@@ -21,6 +24,14 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+db.on('error', (e)=>{
+  console.log(e)
+})
+
+db.once('open', ()=>{
+  console.log('数据库连接成功')
+})
 
 /*
 app.all('*', (req, res, next)=>{
@@ -39,8 +50,9 @@ app.all('*', (req, res, next)=>{
 })
 */
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+/*app.use('/', indexRouter);
+app.use('/users', usersRouter);*/
+router(app)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
