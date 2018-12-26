@@ -9,7 +9,7 @@ const fs = require('fs')
 const qiniu = require('qiniu')
 const gm = require('gm')
 
-export default class BaseComponent {
+module.exports = class BaseComponent {
   constructor(){
     this.idList = ['restaurant_id', 'food_id', 'order_id', 'user_id', 'address_id', 'cart_id', 'img_id', 'category_id', 'item_id', 'sku_id', 'admin_id', 'static_id']
     this.imgTypeList = ['shop', 'food', 'avatar', 'default']

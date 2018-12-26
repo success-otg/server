@@ -14,7 +14,7 @@ const userSchema = mongoose.Schema({
     type: String,
     default: 'default.jpg'
   },
-  city: String
+  // city: String
 })
 
 userSchema.index({id: 1})

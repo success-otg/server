@@ -35,4 +35,4 @@ Ids.findOne((err,data)=>{
     newIds.save()
   }
 })
-export default Ids
+module.exports = Ids

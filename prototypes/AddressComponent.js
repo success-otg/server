@@ -1,4 +1,4 @@
-import BaseComponent from './baseComponent'
+const BaseComponent = require('./baseComponent')
 
 class AddressComponent extends BaseComponent{
   constructor(props) {
@@ -7,4 +7,4 @@ class AddressComponent extends BaseComponent{
 
 }
 
-export default AddressComponent
+module.exports = AddressComponent

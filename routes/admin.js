@@ -1,21 +1,13 @@
 const express = require('express');
 const router = express.Router();
-const Admin = require('../models/Admin/Admin')
+const Admin = require('../controller/admin/admin')
 
-/* GET users listing. */
-router.get('/user', function(req, res, next) {
-  Admin.create({username: 'Vicky', password: '123456'}).then((res)=>{
-    console.log(res)
-  }).catch(e=>{
-    console.log(e)
-  })
+router.post('/login',Admin.login)
+router.post('/user',(req, res,next)=>{
+  console.log(Admin)
   res.send({
-    username: 'Vicky'
+    name: 'hh'
   })
-});
-
-router.post('/register', (req, res, next)=>{
-
 })
 
 module.exports = router;

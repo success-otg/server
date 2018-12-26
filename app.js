@@ -5,6 +5,10 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require('cors')
 const router = require('./routes/index')
+const connectMongo = require('connect-mongo')
+const session = require('express-session')
+const config = require('config-lite')
+
 
 /*const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/admin');*/
@@ -22,7 +26,15 @@ app.set('view engine', 'ejs');
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+const MongoStore = connectMongo(session)
 app.use(cookieParser());
+app.use(session({
+  name: 'Vicky',
+  secret: 'hhh',
+  resave: true,
+  saveUninitialized: false,
+  store: new MongoStore({url: 'mongodb://localhost:27017/app', ttl: 7*24*60*60})
+}))
 app.use(express.static(path.join(__dirname, 'public')));
 
 db.on('error', (e)=>{
