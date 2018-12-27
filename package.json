@@ -6,6 +6,7 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
+    "captchapng": "0.0.1",
     "config-lite": "^2.1.0",
     "connect-mongo": "^2.0.3",
     "cookie-parser": "~1.4.3",

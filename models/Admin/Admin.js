@@ -14,6 +14,7 @@ const userSchema = mongoose.Schema({
     type: String,
     default: 'default.jpg'
   },
+  nickname: String
   // city: String
 })
 
