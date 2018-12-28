@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-const userSchema = mongoose.Schema({
+const adminSchema = mongoose.Schema({
   user_name: String,
   password: String,
   id: Number,
@@ -18,8 +18,8 @@ const userSchema = mongoose.Schema({
   // city: String
 })
 
-userSchema.index({id: 1})
+adminSchema.index({id: 1})
 
-const Admin = mongoose.model('Admin', userSchema)
+const Admin = mongoose.model('Admin', adminSchema)
 
 module.exports = Admin
