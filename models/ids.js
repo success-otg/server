@@ -4,6 +4,7 @@ const idsSchema = new mongoose.Schema({
   restaurant_id: Number,
   food_id: Number,
   order_id: Number,
+  user_id: Number,
   address_id: Number,
   cart_id: Number,
   img_id: Number,

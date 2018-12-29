@@ -7,7 +7,6 @@ const cors = require('cors')
 const router = require('./routes/index')
 const connectMongo = require('connect-mongo')
 const session = require('express-session')
-const Cookie = require('cookie')
 
 /*const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/admin');*/
@@ -16,7 +15,7 @@ const db = require('./db/db')
 
 const app = express();
 
-// app.use(cors({credentials: true, origin: true}))
+app.use(cors({credentials: true, origin: true}))
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -27,6 +26,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 const MongoStore = connectMongo(session)
 app.use(cookieParser());
+
 app.use(session({
   name: 'Vicky',
   secret: 'hhh',
@@ -34,6 +34,8 @@ app.use(session({
   saveUninitialized: false,
   store: new MongoStore({url: 'mongodb://localhost:27017/app', ttl: 7*24*60*60})
 }))
+
+
 
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -46,13 +48,13 @@ db.once('open', ()=>{
 })
 
 app.all('*', (req, res, next)=>{
-  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Origin", "http://localhost:3000");
   res.header("Access-Control-Allow-Headers", "X-Requested-With");
   res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
+  res.header('Access-Control-Allow-Credentials', 'true');
   res.header("X-Powered-By", ' 3.2.1')
   //这段仅仅为了方便返回json而已
   res.header("Content-Type", "application/json;charset=utf-8");
-  res.header('Access-Control-Allow-Credentials', 'true');
   if(req.method === 'OPTIONS') {
     //让options请求快速返回
     res.sendStatus(200);

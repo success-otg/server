@@ -7,8 +7,8 @@ class Captchas {
     p.color(125,125,125,125)
     p.color(80,80,80,255)
     const base64 = p.getBase64()
-    res.cookie('cap', cap, {maxAge: 300000, httpOnly: true})
-    console.log(req.cookies)
+    res.cookie('cap', cap)
+    // console.log(req.cookies)
     res.send({
       status: 1,
       code: 'data:image/png;base64,'+base64
