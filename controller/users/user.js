@@ -32,7 +32,7 @@ class User extends AddressComponent {
     } else if (!captcha_code) {
       throw new Error('验证码参数错误')
     }
-    //验证二维码是否正确
+    //验证验证码是否正确
     if (cap.toString() !== captcha_code.toString()) {
       res.send({
         status: 0,
@@ -50,11 +50,11 @@ class User extends AddressComponent {
         const newUser = {username, password: newpassword, user_id: user_id}
         UserModel.create(newUser)
         const newUserInfo = {username, user_id: user_id, id: user_id, register_time}
-        /*const createUser = new UserInfoModel(newUserInfo)
-        const userInfo = await createUser.save()*/
-        UserInfoModel.create(newUserInfo)
+        const createUser = new UserInfoModel(newUserInfo)
+        const userInfo = await createUser.save()
+        console.log(userInfo)
         res.send({
-          userInfo: 'hehe'
+          userInfo
         })
         return
       } else if (user.password.toString() !== newpassword.toString()) {
@@ -65,8 +65,10 @@ class User extends AddressComponent {
         })
         return
       }else{
+        req.session.user_id = user.user_id
+        const userInfo = await UserInfoModel.findOne({user_id: user.user_id})
         res.send({
-          name: 'tired'
+          userInfo
         })
       }
     } catch (e) {
