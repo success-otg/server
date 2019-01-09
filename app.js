@@ -47,7 +47,7 @@ db.once('open', ()=>{
   console.log('数据库连接成功')
 })
 
-app.all('*', (req, res, next)=>{
+/*app.all('*', (req, res, next)=>{
   res.header("Access-Control-Allow-Origin", "http://localhost:3000");
   res.header("Access-Control-Allow-Headers", "X-Requested-With");
   res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
@@ -61,7 +61,7 @@ app.all('*', (req, res, next)=>{
   } else {
     next();
   }
-})
+})*/
 
 /*app.use('/', indexRouter);
 app.use('/users', usersRouter);*/

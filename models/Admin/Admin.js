@@ -6,6 +6,7 @@ const adminSchema = mongoose.Schema({
   id: Number,
   create_time: String,
   status: Number,
+  loginFlag: Number,
   admin: {
     type: String,
     default: '管理员'
@@ -14,7 +15,6 @@ const adminSchema = mongoose.Schema({
     type: String,
     default: 'default.jpg'
   },
-  nickname: String
   // city: String
 })
 

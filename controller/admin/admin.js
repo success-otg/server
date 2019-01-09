@@ -1,89 +1,97 @@
-
 const AdminModel = require('../../models/Admin/Admin')
 const AddressComponent = require('../../prototypes/AddressComponent')
-const formidable = require('formidable')
-const dtime = require('time-formater')
+const moment = require('moment')
 const crypto = require('crypto')
 
-class Admin extends AddressComponent{
-  constructor(){
+class Admin extends AddressComponent {
+  constructor() {
     super()
+    this.resData = {
+      status: 1,
+      type: 'SUCCESS',
+      message: ''
+    }
     this.login = this.login.bind(this)
   }
-  async login(req, res, next){
-    const form = new formidable.IncomingForm()
-    form.parse(req, async (err, fields, files) => {
-      if (err){
-        res.send({
-          status: 0,
-          type: 'FORM_DATA_ERROR',
-          message: '表单信息错误'
-        })
-        return ''
-      }
-      const {user_name, password, status = 1} = fields
-      try {
-        if (!user_name){
-          throw new Error('用户名参数错误')
-        } else if (!password){
-          throw new Error('密码参数错误')
-        } 
-      }catch (err) {
-        console.log(err.message, err)
-        res.send({
-          status: 0,
-          type: 'GET_ERROR_PARAM',
-          message: err.message
-        })
+
+  async login(req, res, next) {
+    const statusArr = [0, 1, 2]
+    const cap = req.cookies.cap
+    const {loginFlag, user_name, password, captcha} = req.body
+    try {
+      if (!user_name || !password || !captcha) {
+        this.resData.status = 0
+        this.resData.type = 'GET_ERROR_FORM_DATA'
+        this.resData.message = '用户参数信息错误'
+        res.send(this.resData)
+        return
+      } else if (!statusArr.includes(Number(loginFlag))) {
+        this.resData.status = 0
+        this.resData.type = 'GET_ERROR_LOGIN_FLAG'
+        this.resData.message = '登录标识非法'
+        res.send(this.resData)
+        return
+      } else if (!cap) {
+        this.resData.status = 0
+        this.resData.type = 'ERROR_CAPTCHA'
+        this.resData.message = '验证码失效'
+        res.send(this.resData)
+        return
+      } else if (cap.toString !== captcha.toString) {
+        this.resData.status = 0
+        this.resData.type = 'ERROR_CAPTCHA'
+        this.resData.message = '验证码不正确'
+        res.send(this.resData)
         return
       }
       const newpassword = this.encryption(password)
-      try{
+      try {
         const admin = await AdminModel.findOne({user_name})
-        if (!admin){
-          const adminTip = status == 1?'管理员':'超级管理员'
-          const admin_id = await this.getId('admin_id')
+        if (!admin) {
+          const tip = 1
+          const adminTip = tip === 1 ? '管理员' : '超级管理员'
+          const id = await this.getId('admin_id')
+          const create_time = moment().format('YYYY-MM-DD HH:mm:ss')
           const newAdmin = {
             user_name,
             password: newpassword,
-            id: admin_id,
-            create_time: dtime().format('YYYY-MM-DD HH:mm'),
+            loginFlag,
+            id,
+            status: tip,
+            create_time,
             admin: adminTip,
-            status
           }
-          await AdminModel.create(newAdmin)
-          res.send({
-            status: 1,
-            message: '注册管理员成功'
-          })
-        }else if (newpassword.toString() != admin.password.toString()){
-          console.log('管理员登录密码错误')
-          res.send({
-            status: 0,
-            type: 'ERROR_PASSWORD',
-            message: '该用户已存在，密码输入错误'
-          })
-        } else {
-          req.session.admin_id = admin.id
-          res.send({
-            status: 1,
-            message: '登录成功'
-          })
+          AdminModel.create(newAdmin)
+          res.cookie('admin_id', id)
+          this.resData.message = `管理员${user_name}登录成功`
+          res.send(this.resData)
+        }else if (newpassword!==admin.password.toString()) {
+          this.resData.status = 0
+          this.resData.type = 'ERROR_PASSWORD'
+          this.resData.message = '管理员登录密码错误'
+          res.send(this.resData)
+        }else {
+          res.cookie('admin_id', admin.id)
+          this.resData.message = `管理员${admin.user_name}登录成功`
+          res.send(this.resData)
         }
-      }catch (err) {
-        console.log('登录管理员失败', err)
-        res.send({
-          status: 0,
-          type: 'LOGIN_ADMIN_FAILED',
-          message: '登录管理员失败'
-        })
+      } catch (e) {
+        this.resData.status = 0
+        this.resData.type = 'SAVE_ADMIN_ERROR'
+        this.resData.message = '登录失败'
       }
-    })
+    } catch (e) {
+      this.resData.status = 0
+      this.resData.type = 'GET_ERROR_PARAM'
+      this.resData.message = e.message
+      res.send(this.resData)
+    }
   }
-  encryption(password){
+
+  encryption(password) {
     const md5 = crypto.createHash('md5')
     return md5.update(password).digest('base64')
   }
 }
 
-module.exports = new Admin
+module.exports = new Admin()
