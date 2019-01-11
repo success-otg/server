@@ -4,6 +4,7 @@ const User = require('../controller/users/user')
 const router = express.Router()
 
 router.get('/captchas', Captchas.getCaptchas)
+router.post('/img', Captchas.getImg)
 router.get('/user', User.getInfo)
 router.get('/user/:user_id', User.getInfoById)
 router.get('/users/list', User.getUserList)
