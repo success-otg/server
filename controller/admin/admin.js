@@ -65,13 +65,14 @@ class Admin extends AddressComponent {
             admin: adminTip,
           }
           AdminModel.create(newAdmin)
-          res.cookie('admin_id', id)
+          req.session.admin_id = id
           let resData = {
             status: 1,
             type: 'SUCCESS',
             message: `管理员${user_name}登录成功`
           }
           res.send(resData)
+          return ''
         } else if (newpassword !== admin.password.toString()) {
           let resData = {
             status: 0,
@@ -79,14 +80,16 @@ class Admin extends AddressComponent {
             message: `管理员登录密码错误`
           }
           res.send(resData)
+          return ''
         } else {
-          res.cookie('admin_id', admin.id)
+          req.session.admin_id = admin.id
           let resData = {
             status: 1,
             type: 'SUCCESS',
             message: `管理员${user_name}登录成功`
           }
           res.send(resData)
+          return ''
         }
       } catch (e) {
         let resData = {
@@ -109,6 +112,31 @@ class Admin extends AddressComponent {
   encryption(password) {
     const md5 = crypto.createHash('md5')
     return md5.update(password).digest('base64')
+  }
+
+  async signout(req, res) {
+    try {
+      delete req.session.admin_id
+      res.send({
+        status: 1,
+        success: '退出成功'
+      })
+    }catch (e) {
+      res.send({
+        status: 0,
+        message: `退出失败，${e}`
+      })
+    }
+  }
+
+  async getAdminInfo(req, res) {
+    const admin_id = req.session.admin_id
+    const adminInfo = await AdminModel.findOne({id: admin_id})
+    res.send({
+      status: 1,
+      type: 'SUCCESS',
+      adminInfo
+    })
   }
 }
 
