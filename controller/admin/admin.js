@@ -119,7 +119,7 @@ class Admin extends AddressComponent {
       delete req.session.admin_id
       res.send({
         status: 1,
-        success: '退出成功'
+        message: '退出成功'
       })
     }catch (e) {
       res.send({

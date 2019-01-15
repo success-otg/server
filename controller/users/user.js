@@ -90,80 +90,33 @@ class User extends AddressComponent {
     return md5.update(password).digest('base64')
   }
 
-  async getInfo(req, res, next) {
-    const sid = req.session.user_id
-    const qid = req.query.user_id
-    const user_id = sid || qid
-    if (!user_id || !Number(user_id)) {
-      res.send({
-        status: 0,
-        type: 'GET_USER_INFO_FAILED',
-        message: '通过session获取用户信息失败'
-      })
-      return
-    }
+  async getUserList(req, res){
+    const {limit, offset} = req.query
     try {
-      const userinfo = await UserInfoModel.findOne({user_id}, '-_id')
-      res.send(userinfo)
-    } catch (e) {
-      console.log('通过session获取用户信息失败', err)
+      const users = await UserInfoModel.find({}).limit(Number(limit)).skip(Number(offset))
       res.send({
-        status: 0,
-        type: 'GET_USER_INFO_FAILED',
-        message: '通过session获取用户信息失败'
+        status: 1,
+        type: 'SUCCESS',
+        users
       })
-    }
-  }
-
-  async getInfoById(req, res, next) {
-    const user_id = req.params.user_id
-    if (!user_id || !Number(user_id)) {
-      console.log('通过ID获取用户信息失败')
-      res.send({
-        status: 0,
-        type: 'GET_USER_INFO_FAILED',
-        message: '通过用户ID获取用户信息失败'
-      })
-      return
-    }
-    try {
-      const userinfo = await UserInfoModel.findOne({user_id}, '-_id')
-      res.send(userinfo)
-    } catch (e) {
-      console.log('通过ID获取用户信息失败')
-      res.send({
-        status: 0,
-        type: 'GET_USER_INFO_FAILED',
-        message: '通过用户ID获取用户信息失败'
-      })
-      return
-    }
-  }
-
-  async getUserList(req, res, next) {
-    const {limit = 20, offset = 0} = req.query
-    try {
-      const users = await UserInfoModel.find({}, '-_id').sort({}, '-_id').limit(Number(limit)).skip(Number(offset))
-      res.send(users)
-    } catch (e) {
-      console.log('获取用户列表数据失败', e)
+    }catch (e) {
       res.send({
         status: 0,
         type: 'GET_DATA_ERROR',
-        message: '获取用户列表数据失败'
+        message: '获取用户列表失败'
       })
     }
   }
 
-  async getUserCount(req, res, next) {
+  async getUserCount(req, res){
     try {
       const count = await UserInfoModel.countDocuments()
       res.send({
         status: 1,
+        type: 'SUCCESS',
         count
       })
-    } catch (e) {
-      console.log('获取用户数量失败', err)
+    }catch (e) {
       res.send({
         status: 0,
         type: 'ERROR_TO_GET_USER_COUNT',

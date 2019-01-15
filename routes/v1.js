@@ -5,9 +5,7 @@ const router = express.Router()
 
 router.get('/captchas', Captchas.getCaptchas)
 router.post('/img', Captchas.getImg)
-router.get('/user', User.getInfo)
-router.get('/user/:user_id', User.getInfoById)
-router.get('/users/list', User.getUserList)
+router.post('/users/list', User.getUserList)
 router.get('/users/count', User.getUserCount)
 
 module.exports = router

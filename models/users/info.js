@@ -12,7 +12,7 @@ const userInfoSchema = new Schema({
   email: {type: String, default: ''},
   gift_amount: {type: Number, default: 3},
   city: String,
-  registe_time: String,
+  register_time: String,
   id: Number,
   user_id: Number,
   is_active: {type: Number, default: 1},
