@@ -2,8 +2,7 @@ const AddressComponent = require('../../prototypes/addressComponent')
 const UserInfoModel = require('../../models/users/info')
 const UserModel = require('../../models/users/user')
 const crypto = require('crypto')
-const dtime = require('time-formater')
-
+const moment = require('moment')
 
 class User extends AddressComponent {
   constructor() {
@@ -46,7 +45,7 @@ class User extends AddressComponent {
       const user = await UserModel.findOne({username})
       if (!user){
         const user_id = await this.getId('user_id')
-        const register_time = dtime().format('YYYY-MM-DD HH:mm').toString()
+        const register_time = moment().format('YYYY-MM-DD HH:mm').toString()
         const newUser = {username, password: newpassword, user_id: user_id}
         UserModel.create(newUser)
         const newUserInfo = {username, user_id: user_id, id: user_id, register_time}
@@ -66,7 +65,9 @@ class User extends AddressComponent {
         return
       }else{
         req.session.user_id = user.user_id
+        console.log(user)
         const userInfo = await UserInfoModel.findOne({user_id: user.user_id})
+        console.log(userInfo)
         res.send({
           userInfo
         })
