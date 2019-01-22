@@ -43,7 +43,7 @@ class User extends AddressComponent {
     const newpassword = this.encryption(password)
     try {
       const user = await UserModel.findOne({username})
-      if (!user){
+      if (!user) {
         const user_id = await this.getId('user_id')
         const register_time = moment().format('YYYY-MM-DD HH:mm').toString()
         const newUser = {username, password: newpassword, user_id: user_id}
@@ -63,7 +63,7 @@ class User extends AddressComponent {
           message: '登录密码错误'
         })
         return
-      }else{
+      } else {
         req.session.user_id = user.user_id
         console.log(user)
         const userInfo = await UserInfoModel.findOne({user_id: user.user_id})
@@ -81,6 +81,15 @@ class User extends AddressComponent {
     }
   }
 
+  async signout(req, res, next) {
+    delete req.session.user_id
+    res.send({
+      status: 1,
+      type: 'SUCCESS',
+      message: '退出成功'
+    })
+  }
+
   encryption(password) {
     const newpassword = this.Md5(this.Md5(password).substr(2, 7) + this.Md5(password))
     return newpassword
@@ -91,7 +100,7 @@ class User extends AddressComponent {
     return md5.update(password).digest('base64')
   }
 
-  async getUserList(req, res){
+  async getUserList(req, res) {
     const {limit, offset} = req.query
     try {
       const users = await UserInfoModel.find({}).limit(Number(limit)).skip(Number(offset))
@@ -100,7 +109,7 @@ class User extends AddressComponent {
         type: 'SUCCESS',
         users
       })
-    }catch (e) {
+    } catch (e) {
       res.send({
         status: 0,
         type: 'GET_DATA_ERROR',
@@ -109,7 +118,7 @@ class User extends AddressComponent {
     }
   }
 
-  async getUserCount(req, res){
+  async getUserCount(req, res) {
     try {
       const count = await UserInfoModel.countDocuments()
       res.send({
@@ -117,7 +126,7 @@ class User extends AddressComponent {
         type: 'SUCCESS',
         count
       })
-    }catch (e) {
+    } catch (e) {
       res.send({
         status: 0,
         type: 'ERROR_TO_GET_USER_COUNT',
