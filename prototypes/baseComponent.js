@@ -2,7 +2,6 @@
 const fetch = require('node-fetch')
 const Ids = require('../models/ids')
 //A Node.js module for parsing form data, especially file uploads.
-const formidable = require('formidable')
 const path = require('path')
 const fs = require('fs')
 // 云存储

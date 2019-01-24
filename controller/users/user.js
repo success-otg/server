@@ -3,6 +3,7 @@ const UserInfoModel = require('../../models/users/info')
 const UserModel = require('../../models/users/user')
 const crypto = require('crypto')
 const moment = require('moment')
+const formidable = require('formidable')
 
 class User extends AddressComponent {
   constructor() {
@@ -133,6 +134,25 @@ class User extends AddressComponent {
         message: '获取用户数量失败'
       })
     }
+  }
+
+  async updateAvatar(req, res) {
+    const sid = req.session.user_id
+    const pid = req.params.user_id
+    const user_id = sid || pid
+    if (!user_id || !Number(user_id)) {
+      res.send({
+        status: 0,
+        type: 'ERROR_USERID',
+        message: 'user_id参数错误'
+      })
+      return
+    }
+    res.send({
+      message: 'success',
+      resData: req.body
+    })
+
   }
 }
 

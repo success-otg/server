@@ -6,9 +6,11 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
+    "body-parser": "^1.18.3",
     "captchapng": "0.0.1",
     "config-lite": "^2.1.0",
     "connect-mongo": "^2.0.3",
+    "connect-multiparty": "^2.2.0",
     "cookie-parser": "~1.4.3",
     "cookies": "^0.7.3",
     "cors": "^2.8.5",
@@ -17,6 +19,7 @@
     "ejs": "~2.5.7",
     "express": "~4.16.0",
     "express-session": "^1.15.6",
+    "formidable": "^1.2.1",
     "fs": "0.0.1-security",
     "gm": "^1.23.1",
     "graphicsmagick": "0.0.1",
