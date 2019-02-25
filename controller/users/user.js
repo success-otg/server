@@ -8,6 +8,7 @@ const formidable = require('formidable')
 class User extends AddressComponent {
   constructor() {
     super()
+
     this.encryption = this.encryption.bind(this)
     this.login = this.login.bind(this)
   }
@@ -46,10 +47,11 @@ class User extends AddressComponent {
       const user = await UserModel.findOne({username})
       if (!user) {
         const user_id = await this.getId('user_id')
+        const cityInfo = await this.guessPosition(req)
         const register_time = moment().format('YYYY-MM-DD HH:mm').toString()
         const newUser = {username, password: newpassword, user_id: user_id}
         UserModel.create(newUser)
-        const newUserInfo = {username, user_id: user_id, id: user_id, register_time}
+        const newUserInfo = {username, user_id: user_id, id: user_id,city: cityInfo.city, register_time}
         const createUser = new UserInfoModel(newUserInfo)
         const userInfo = await createUser.save()
         console.log(userInfo)

@@ -16,7 +16,7 @@ const db = require('./db/db')
 
 const app = express();
 
-app.use(cors({credentials: true, origin: true}))
+// app.use(cors({credentials: true, origin: true}))
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -50,7 +50,7 @@ db.once('open', ()=>{
   console.log('数据库连接成功')
 })
 
-/*app.all('*', (req, res, next)=>{
+app.all('*', (req, res, next)=>{
   res.header("Access-Control-Allow-Origin", "http://localhost:3000");
   res.header("Access-Control-Allow-Headers", "X-Requested-With");
   res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
@@ -64,7 +64,7 @@ db.once('open', ()=>{
   } else {
     next();
   }
-})*/
+})
 
 /*app.use('/', indexRouter);
 app.use('/users', usersRouter);*/

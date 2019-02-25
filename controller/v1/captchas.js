@@ -10,7 +10,11 @@ class Captchas {
     res.cookie('cap', cap)
     res.send({
       status: 1,
-      code: 'data:image/png;base64,' + base64
+      code: 'data:image/png;base64,' + base64,
+      // header1: req.header('x-forwarded-for'),
+      header2: req.connection.remoteAddress,
+      // header3: req.socket.remoteAddress,
+      // header4: req.connection.socket.remoteAddress
     })
   }
 

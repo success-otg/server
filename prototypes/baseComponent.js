@@ -84,7 +84,4 @@ module.exports = class BaseComponent {
       throw new Error(e)
     }
   }
-//  上传图片
-  async uploadImg(req, res, next){
-  }
 }
